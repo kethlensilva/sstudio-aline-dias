@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Carrinho de Compras</title>
+  <link rel="stylesheet" href="/css/carrinho.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="produto">
+      <!-- Pode colocar destaques ou produtos aqui se quiser -->
+    </div>
+    <div class="cart">
+      <div>
+        <h2>Seu Carrinho</h2>
+
+        <div id="itens-carrinho"></div>
+
+        <p><span>Subtotal</span><span id="subtotal">R$ 0,00</span></p>
+        <p><span>Taxa de entrega</span><span>Calcular</span></p>
+      </div>
+      <div class="summary">
+        <p><strong>Total Estimado</strong><strong id="total">R$ 0,00</strong></p>
+        <a href="/login" class="botao-secundario">Entrar</a>
+        <a href="/checkout1">Continuar</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  function formatarPreco(valor) {
+    return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  }
+
+  function carregarCarrinho() {
+    fetch('/api/carrinho')
+      .then(response => response.json())
+      .then(produtos => {
+        const container = document.getElementById('itens-carrinho');
+        container.innerHTML = '';
+        let subtotal = 0;
+
+        produtos.forEach(item => {
+          const produto = item.produto;  // <<--- Ajuste aqui!
+          const itemDiv = document.createElement('div');
+          itemDiv.classList.add('item');
+
+          const precoTotal = produto.preco * item.quantidade;
+          subtotal += precoTotal;
+
+          itemDiv.innerHTML = `
+            <img src="${produto.imagemUrl}" alt="${produto.nome}">
+            <div>
+              <input type="number" min="1" value="${item.quantidade}" data-produto-id="${produto.id}" class="quantidade-produto" />
+              <strong>${produto.nome}</strong><br />
+              ${produto.descricao}
+            </div>
+          `;
+          container.appendChild(itemDiv);
+        });
+
+        document.getElementById('subtotal').textContent = formatarPreco(subtotal);
+        document.getElementById('total').textContent = formatarPreco(subtotal);
+
+        document.querySelectorAll('.quantidade-produto').forEach(input => {
+          input.addEventListener('change', function () {
+            const novoValor = parseInt(this.value);
+            const produtoId = this.getAttribute('data-produto-id');
+
+            if (novoValor <= 0 || isNaN(novoValor)) {
+              alert('Quantidade deve ser maior que zero');
+              carregarCarrinho();
+              return;
+            }
+
+            fetch('/api/carrinho/atualizar', {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ produtoId: produtoId, quantidade: novoValor })
+            })
+              .then(resp => {
+                if (!resp.ok) throw new Error('Erro ao atualizar quantidade');
+                carregarCarrinho();
+              })
+              .catch(err => {
+                alert(err.message);
+                carregarCarrinho();
+              });
+          });
+        });
+      })
+      .catch(error => {
+        console.error('Erro ao carregar o carrinho:', error);
+        alert('Não foi possível carregar o carrinho.');
+      });
+  }
+
+  document.addEventListener('DOMContentLoaded', carregarCarrinho);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout - Endereço</title>
+  <link rel="stylesheet" href="/css/checkout1.css">
+</head>
+<body>
+  <div class="container">
+    <section class="form-section">
+      <h1>Endereço</h1>
+      <form action="/checkout2" method="GET">
+        <input type="text" name="pais" placeholder="País" required>
+        <div class="row">
+          <input type="text" name="primeiro_nome" placeholder="Primeiro nome" required>
+          <input type="text" name="ultimo_nome" placeholder="Último nome" required>
+        </div>
+        <div class="row">
+          <input type="text" name="endereco" placeholder="Endereço" required>
+          <input type="text" name="complemento" placeholder="Complemento">
+        </div>
+        <div class="row">
+          <input type="text" name="cidade" placeholder="Cidade" required>
+          <select name="estado" required>
+            <option value="">Estado</option>
+            <option value="SP">SP</option>
+            <option value="RJ">RJ</option>
+            <option value="MG">MG</option>
+           
+          </select>
+          <input type="text" name="cep" placeholder="CEP" required>
+        </div>
+        <input type="tel" name="telefone" placeholder="Telefone" required>
+        <button type="submit">Próximo</button>
+      </form>
+    </section>
+
+    <aside class="cart">
+  <h2>Seu Carrinho <span id="contador-itens">0 itens</span> <a href="/carrinho">Editar</a></h2>
+  <div id="itens-carrinho"></div>
+  <div class="summary">
+    <p>Subtotal <span id="subtotal">R$ 0,00</span></p>
+    <p>Taxa de entrega <a href="#">Calcular</a></p>
+    <hr>
+    <p><strong>Total Estimado</strong> <span id="total"><strong>R$ 0,00</strong></span></p>
+  </div>
+  <a href="/login" class="botao-secundario">Entrar</a>
+  <a href="/carrinho">Visualizar carrinho</a>
+</aside>
+
+  </div>
+  <script>
+  function formatarPreco(valor) {
+    return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  }
+
+  function carregarCarrinho() {
+    fetch('/api/carrinho')
+      .then(res => res.json())
+      .then(produtos => {
+        const container = document.getElementById('itens-carrinho');
+        const contador = document.getElementById('contador-itens');
+        let subtotal = 0;
+
+        container.innerHTML = '';
+
+        produtos.forEach(produto => {
+          subtotal += produto.produto.preco * produto.quantidade;
+
+          const item = document.createElement('div');
+          item.classList.add('item');
+          item.innerHTML = `
+            <img src="${produto.produto.imagemUrl || '/images/sem-imagem.png'}" alt="${produto.produto.nome}">
+            <div>
+              <strong>${produto.quantidade}x ${produto.produto.nome}</strong>
+              <p>${produto.produto.descricao}</p>
+            </div>
+          `;
+          container.appendChild(item);
+        });
+
+        contador.textContent = `${produtos.length} ${produtos.length === 1 ? 'item' : 'itens'}`;
+        document.getElementById('subtotal').textContent = formatarPreco(subtotal);
+        document.getElementById('total').textContent = formatarPreco(subtotal);
+      })
+      .catch(() => {
+        alert('Erro ao carregar o carrinho.');
+      });
+  }
+
+  document.addEventListener('DOMContentLoaded', carregarCarrinho);
+</script>
+
+
+</body>
+
+</html>
+

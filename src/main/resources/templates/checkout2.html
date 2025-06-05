@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirmação</title>
+  <link rel="stylesheet" href="/css/checkout2.css">
+</head>
+<body>
+  <div class="container">
+    <div class="form-section">
+      <h1>Confirmação</h1>
+
+      <form id="form-pedido">
+        <h2>Método de Pagamento</h2>
+        <div class="row">
+          <input type="radio" name="pagamento" id="cartao" checked>
+          <label for="cartao">Cartão de Crédito</label>
+        </div>
+        <div class="row">
+          <input type="text" id="numeroCartao" placeholder="Número do Cartão" required>
+          <input type="text" id="nomeCartao" placeholder="Nome no Cartão" required>
+        </div>
+        <div class="row">
+          <input type="text" id="validade" placeholder="Validade (MM/AA)" required>
+          <input type="text" id="cvv" placeholder="CVV" required>
+        </div>
+
+        <h2>Endereço de Entrega</h2>
+        <p>João da Silva<br>
+        Rua das Flores, 123 - São Paulo/SP<br>
+        CEP: 01234-567<br>
+        Brasil</p>
+
+        <button type="submit">Finalizar Pedido</button>
+        <a href="/checkout1">Voltar</a>
+      </form>
+    </div>
+
+    <div class="cart">
+      <div>
+        <h2>Resumo do Pedido</h2>
+        <div id="itens-carrinho"></div>
+      </div>
+      <div class="summary">
+        <p><span>Subtotal</span><span id="subtotal">R$ 0,00</span></p>
+        <p><span>Entrega</span><span>R$ 0,00</span></p>
+        <hr>
+        <p><strong>Total</strong><strong id="total">R$ 0,00</strong></p>
+        <a href="/checkout1">Voltar</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+function formatarPreco(valor) {
+  return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+}
+
+function carregarResumo() {
+  fetch('/api/carrinho')
+    .then(res => res.json())
+    .then(produtos => {
+      const container = document.getElementById('itens-carrinho');
+      let subtotal = 0;
+
+      container.innerHTML = '';
+
+      produtos.forEach(produto => {
+        subtotal += produto.produto.preco * produto.quantidade;
+
+        const item = document.createElement('div');
+        item.classList.add('item');
+        item.innerHTML = `
+          <img src="${produto.produto.imagemUrl || '/images/sem-imagem.png'}" alt="${produto.produto.nome}">
+          <div>
+            <strong>${produto.quantidade}x ${produto.produto.nome}</strong><br>
+            ${produto.produto.descricao}
+          </div>
+        `;
+        container.appendChild(item);
+      });
+
+      document.getElementById('subtotal').textContent = formatarPreco(subtotal);
+      document.getElementById('total').textContent = formatarPreco(subtotal);
+    })
+    .catch(() => {
+      alert('Erro ao carregar o resumo do pedido.');
+    });
+}
+
+document.addEventListener('DOMContentLoaded', carregarResumo);
+
+document.getElementById('form-pedido').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  const pedido = {
+    pagamento: {
+      metodo: "Cartão de Crédito",
+      numeroCartao: document.getElementById('numeroCartao').value,
+      nomeCartao: document.getElementById('nomeCartao').value,
+      validade: document.getElementById('validade').value,
+      cvv: document.getElementById('cvv').value
+    },
+    endereco: {
+      nome: "João da Silva",
+      rua: "Rua das Flores",
+      numero: "123",
+      cidade: "São Paulo",
+      estado: "SP",
+      cep: "01234-567",
+      pais: "Brasil"
+    }
+  };
+
+  fetch('/api/pedidos/finalizar', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(pedido)
+  })
+  .then(res => {
+    if (res.ok) {
+      window.location.href = "/detalhesc";
+    } else {
+      alert("Erro ao finalizar pedido.");
+    }
+  })
+  .catch(() => {
+    alert("Erro na comunicação com o servidor.");
+  });
+});
+</script>
+
+
+</body>
+</html>

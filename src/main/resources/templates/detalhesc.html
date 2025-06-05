@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pedido Recebido</title>
+  <link rel="stylesheet" href="/css/detalhesc.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Seu pedido foi recebido!</h1>
+    <p class="subtitulo">Agradecemos pela compra!</p>
+    
+    <hr class="linha" />
+
+    <div class="produtos" id="produtos-comprados"></div>
+
+    <div class="resumo">
+      <div class="precos">
+        <p>Subtotal</p>
+        <p class="subtotal" id="subtotal">R$ 0,00</p>
+        <p>Taxa de Entrega</p>
+        <p>Grátis</p>
+      </div>
+      <hr />
+      <div class="total">
+        <p><strong>Total</strong></p>
+        <p><strong id="total">R$ 0,00</strong></p>
+      </div>
+    </div>
+
+    <hr class="linha" />
+
+    <div class="endereco" id="endereco-entrega">
+      <p><strong>Seu pedido está sendo enviado para:</strong></p>
+      <p id="endereco-texto">Carregando endereço...</p>
+    </div>
+
+    <div class="botoes">
+      <button class="ver-status" onclick="window.location.href='/status'">Ver Status</button>
+      <a href="/#" class="voltar-compras">Voltar às compras</a>
+    </div>
+
+    <h2>Recomendado para você</h2>
+
+    <div class="recomendacoes">
+      <div class="item-recomendado">
+        <img src="/images/tonica3.JPG" alt="Tônico Mega Hair" />
+        <p class="titulo">Tônico Mega Hair</p>
+        <p class="descricao">Tônico Capilar</p>
+        <p class="preco">R$ 69,90</p>
+        <button class="btn-carrinho" onclick="adicionarAoCarrinho(1)">🛒 Carrinho</button>
+      </div>
+      <div class="item-recomendado">
+        <img src="/images/Lumina Blond.jpg" alt="Lumina Blond Hair" />
+        <p class="titulo">Lumina Blond Hair</p>
+        <p class="descricao">Shampoo, Condicionador, Creme e Leave-in</p>
+        <p class="preco">R$ 199,99</p>
+        <button class="btn-carrinho" onclick="adicionarAoCarrinho(2)">🛒 Carrinho</button>
+      </div>
+      <div class="item-recomendado">
+        <img src="/images/kitlumera.JPG" alt="Lumera Hair" />
+        <p class="titulo">Lumera Hair</p>
+        <p class="descricao">Shampoo, Condicionador, Creme e Leave-in</p>
+        <p class="preco">R$ 150,00</p>
+        <button class="btn-carrinho" onclick="adicionarAoCarrinho(3)">🛒 Carrinho</button>
+      </div>
+      <div class="item-recomendado desconto">
+        <div class="etiqueta">15% off</div>
+        <img src="/images/Perfume Capilar.jpg" alt="Cherrie Hair" />
+        <p class="titulo">Cherrie Hair</p>
+        <p class="descricao">Perfume Capilar</p>
+        <p class="preco">
+          <span class="preco-antigo">R$ 59,90</span> R$ 50,90
+        </p>
+        <button class="btn-carrinho" onclick="adicionarAoCarrinho(4)">🛒 Carrinho</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-content">
+      <div class="col">
+        <h3>Aline Dias Studio</h3>
+        <p>Explore nossos produtos</p>
+        <input type="email" placeholder="Seu Email" />
+        <button>Inscreva</button>
+      </div>
+      <div class="col">
+        <h4>LOJA</h4>
+        <p>Produtos</p>
+      </div>
+      <div class="col">
+        <h4>SOBRE</h4>
+        <p>Sobre nós</p>
+        <p>Contato</p>
+        <p>Loja</p>
+        <p>Endereço</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>TODOS OS DIREITOS RESERVADOS</p>
+      <p><a href="#">Política de Privacidade</a> | <a href="#">Termo de uso</a></p>
+      <div class="redes">
+        <a href="#"><img src="img/facebook.png" alt="Facebook" /></a>
+        <a href="#"><img src="img/instagram.png" alt="Instagram" /></a>
+      </div>
+    </div>
+  </footer>
+
+ <script>
+    function formatarPreco(valor) {
+      return valor.toLocaleString('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+      });
+    }
+
+    function getPedidoIdFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('pedidoId');
+    }
+
+    function carregarPedido() {
+      const pedidoId = getPedidoIdFromUrl();
+      if (!pedidoId) {
+        document.getElementById('produtos-comprados').innerHTML = 'Pedido inválido ou não encontrado.';
+        return;
+      }
+
+      fetch(`/api/pedidos/${pedidoId}`)
+        .then((res) => {
+          if (!res.ok) throw new Error('Pedido não encontrado');
+          return res.json();
+        })
+        .then((pedido) => {
+          const container = document.getElementById('produtos-comprados');
+          container.innerHTML = '';
+          let subtotal = 0;
+
+          // Supondo que pedido tenha uma lista produtos com quantidade, preco, nome, descricao e imagemUrl
+          pedido.produtos.forEach((produto) => {
+            const precoTotal = produto.preco * produto.quantidade;
+            subtotal += precoTotal;
+
+            const item = document.createElement('div');
+            item.classList.add('item-compra');
+            item.innerHTML = `
+              <img src="${produto.imagemUrl}" alt="${produto.nome}" />
+              <div class="info-produto">
+                <p class="nome">${produto.quantidade}x ${produto.nome}</p>
+                <p class="descricao">${produto.descricao}</p>
+                <p class="preco-item">${formatarPreco(precoTotal)}</p>
+              </div>
+            `;
+            container.appendChild(item);
+          });
+
+          document.getElementById('subtotal').textContent = formatarPreco(subtotal);
+          document.getElementById('total').textContent = formatarPreco(subtotal);
+
+          // Exibir endereço de entrega
+          const endereco = pedido.endereco;
+          if (endereco) {
+            const enderecoTexto = `
+              ${endereco.rua}, ${endereco.numero}<br>
+              ${endereco.cidade} - ${endereco.estado}<br>
+              CEP: ${endereco.cep}
+            `;
+            document.getElementById('endereco-texto').innerHTML = enderecoTexto;
+          } else {
+            document.getElementById('endereco-texto').textContent = 'Endereço não disponível';
+          }
+        })
+        .catch(() => {
+          document.getElementById('produtos-comprados').innerHTML = 'Erro ao carregar detalhes do pedido.';
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', carregarPedido);
+
+    // Função dummy para adicionar ao carrinho
+    function adicionarAoCarrinho(produtoId) {
+      alert(`Adicionar produto ${produtoId} ao carrinho`);
+      // Aqui você implementaria a chamada para adicionar produto ao carrinho
+    }
+  </script>
+
+</body>
+</html>
+

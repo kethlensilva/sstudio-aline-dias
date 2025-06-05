@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Aline Dias Studio</title>
+  <link rel="stylesheet" href="/css/home.css" />
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img src="/images/logo.jpg" alt="Logo" />
+    </div>
+    <nav>
+      
+      <a href="/#">Lumera Hair</a>
+      
+    </nav>
+    <div class="header-right">
+      <a href="/carrinho">Carrinho</a>
+      <a href="/login">Login</a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-text">
+      <span class="new-badge">New!</span>
+      <h1>Linha Lumera Hair</h1>
+      <p>Conheça nossa linha de cosméticos capilares que foi desenvolvida para restaurar a saúde, força e luminosidade dos seus fios.</p>
+      <button>Comprar Produtos</button>
+    </div>
+    <div class="hero-image">
+      <img src="/images/kitlumera.JPG" alt="Linha Lumera Hair" />
+    </div>
+  </section>
+
+  <section class="produtos">
+    <h2>Explore nossos produtos</h2>
+    <div class="grid-produtos">
+      
+      <div class="produto">
+        <span class="new-badge">Novo</span>
+        <img src="/images/kitlumera.JPG" alt="Linha Lumera Hair" />
+        <h3>Linha Lumera Hair</h3>
+        <p>Shampoo, Condicionador, Creme e Leave-in</p>
+        <span class="preco">R$ 150,00</span>
+        <button onclick="adicionarAoCarrinho(this)"
+          data-produtoid="1"
+          data-nome="Linha Lumera Hair"
+          data-descricao="Shampoo, Condicionador, Creme e Leave-in"
+          data-preco="150.00"
+          data-imagem="/images/kitlumera.JPG">
+          Adicionar ao Carrinho
+        </button>
+      </div>
+
+      <div class="produto">
+        <span class="new-badge">Novo</span>
+        <img src="/images/Oléo Capilar.jpg" alt="Óleo Lumera Hair" />
+        <h3>Óleo Lumera Hair</h3>
+        <p>Óleo capilar brilho instantâneo</p>
+        <span class="preco">R$ 50,00</span>
+        <button onclick="adicionarAoCarrinho(this)"
+          data-produtoid="2"
+          data-nome="Óleo Lumera Hair"
+          data-descricao="Óleo capilar brilho instantâneo"
+          data-preco="50.00"
+          data-imagem="/images/Oléo Capilar.jpg">
+          Adicionar ao Carrinho
+        </button>
+      </div>
+
+      <div class="produto">
+        <img src="/images/Lumina Blond.jpg" alt="Luminia Blond Hair" />
+        <h3>Luminia Blond Hair</h3>
+        <p>Shampoo, Condicionador, Creme e Leave-in</p>
+        <span class="preco">R$ 119,99</span>
+        <button onclick="adicionarAoCarrinho(this)"
+          data-produtoid="3"
+          data-nome="Luminia Blond Hair"
+          data-descricao="Shampoo, Condicionador, Creme e Leave-in"
+          data-preco="119.99"
+          data-imagem="/images/Lumina Blond.jpg">
+          Adicionar ao Carrinho
+        </button>
+      </div>
+
+      <div class="produto">
+        <span class="desconto-badge">15% off</span>
+        <img src="/images/Perfume Capilar.jpg" alt="Cherie Hair" />
+        <h3>Cherie Hair</h3>
+        <p>Perfume Capilar</p>
+        <span class="preco"><del>R$ 58,99</del> R$ 50,14</span>
+        <button onclick="adicionarAoCarrinho(this)"
+          data-produtoid="4"
+          data-nome="Cherie Hair"
+          data-descricao="Perfume Capilar"
+          data-preco="50.14"
+          data-imagem="/images/Perfume Capilar.jpg">
+          Adicionar ao Carrinho
+        </button>
+      </div>
+
+      <div class="produto">
+        <img src="/images/mask.JPG" alt="Luminous Mask" />
+        <h3>Luminous Mask</h3>
+        <p>Máscara capilar</p>
+        <span class="preco">R$ 29,99</span>
+        <button onclick="adicionarAoCarrinho(this)"
+          data-produtoid="5"
+          data-nome="Luminous Mask"
+          data-descricao="Máscara capilar"
+          data-preco="29.99"
+          data-imagem="/images/mask.JPG">
+          Adicionar ao Carrinho
+        </button>
+      </div>
+
+      <div class="produto">
+        <img src="/images/tonico1.JPG" alt="Kit Tônico Capilar" />
+        <h3>Kit Tônico Capilar</h3>
+        <p>2 Tônicos capilares para crescimento e fortalecimento</p>
+        <span class="preco">R$ 130,00</span>
+        <button onclick="adicionarAoCarrinho(this)"
+          data-produtoid="6"
+          data-nome="Kit Tônico Capilar"
+          data-descricao="2 Tônicos capilares para crescimento e fortalecimento"
+          data-preco="130.00"
+          data-imagem="/images/tonico1.JPG">
+          Adicionar ao Carrinho
+        </button>
+      </div>
+
+      <div class="produto">
+        <img src="/images/tonico2.JPG" alt="Tônico Fortalecimento" />
+        <h3>Tônico Fortalecimento</h3>
+        <p>Tônico Capilar</p>
+        <span class="preco">R$ 69,90</span>
+        <button onclick="adicionarAoCarrinho(this)"
+          data-produtoid="7"
+          data-nome="Tônico Fortalecimento"
+          data-descricao="Tônico Capilar"
+          data-preco="69.90"
+          data-imagem="/images/tonico2.JPG">
+          Adicionar ao Carrinho
+        </button>
+      </div>
+
+      <div class="produto">
+        <img src="/images/tonica3.JPG" alt="Tônico Mega Hair" />
+        <h3>Tônico Mega Hair</h3>
+        <p>Tônico Capilar</p>
+        <span class="preco">R$ 69,90</span>
+        <button onclick="adicionarAoCarrinho(this)"
+          data-produtoid="8"
+          data-nome="Tônico Mega Hair"
+          data-descricao="Tônico Capilar"
+          data-preco="69.90"
+          data-imagem="/images/tonica3.JPG">
+          Adicionar ao Carrinho
+        </button>
+      </div>
+
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-top">
+      <div>
+        <h3>Aline Dias Studio</h3>
+        <p>Explore nossos produtos</p>
+        <input type="email" placeholder="Seu Email" />
+        <button>Inscreva</button>
+      </div>
+      <div>
+        <h4>LOJA</h4>
+        <a href="/produtos">Produtos</a>
+      </div>
+      <div>
+        <h4>SOBRE</h4>
+        <a href="#">Sobre nós</a>
+        <a href="#">Contato</a>
+        <a href="/home">Loja</a>
+        <a href="#">Endereço</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>TODOS OS DIREITOS RESERVADOS</p>
+      <a href="#">Política de Privacidade</a>
+      <a href="#">Termo de uso</a>
+    </div>
+  </footer>
+
+  <script>
+    function adicionarAoCarrinho(botao) {
+      const produtoId = botao.getAttribute("data-produtoid");
+      if (!produtoId) {
+        alert("ID do produto não encontrado!");
+        return;
+      }
+
+      fetch('/api/carrinho/adicionar', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ produtoId: produtoId, quantidade: 1 })
+      })
+      .then(response => {
+        if (response.ok) {
+          alert("Produto adicionado ao carrinho!");
+        } else {
+          alert("Erro ao adicionar produto.");
+        }
+      })
+      .catch(() => alert("Erro ao conectar com o servidor."));
+    }
+  </script>
+</body>
+</html>
+
